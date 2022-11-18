@@ -1,4 +1,5 @@
 import requests
+import argparse
 import concurrent.futures
 import sys
 from urllib.parse import urlparse, parse_qs, urlencode
@@ -14,6 +15,8 @@ class Colors:
     darkgrey = '\033[90m'
 
 def requestor(line):
+    if(debug):
+        print("[+] " + line)
     urlString = line.strip('\n')
     url = urlparse(urlString)
     if(url.query):
@@ -37,23 +40,51 @@ def requestor(line):
                 if(re.search('xx4<', page)):
                     reflected.append('<')
                 if(reflected):
-                    print('[%s]' % ''.join(map(str,reflected)) + " " + url.scheme + '://' + url.netloc + '/' + url.path + '?' + query)
+                    print('   [!][%s]' % ''.join(map(str,reflected)) + " " + url.scheme + '://' + url.netloc + '/' + url.path + '?' + query)
             except:
                 pass
 
-def main():
-    print(Colors.darkgrey + """
-    _     _  ____________
-   (_)___| |/ / ___/ ___/
-  / / ___/   /\__ \\\\__ \\
- / (__  )   |___/ /__/ /
-/_/____/_/|_/____/____/
-Author: Shelled
-Verison: v0.1
+
+def banner():
+    print(Colors.RED + """
+     ▄█     ▄████████ ▀████    ▐████▀    ▄████████    ▄████████
+    ███    ███    ███   ███▌   ████▀    ███    ███   ███    ███
+    ███▌   ███    █▀     ███  ▐███      ███    █▀    ███    █▀
+    ███▌   ███           ▀███▄███▀      ███          ███
+    ███▌ ▀███████████    ████▀██▄     ▀███████████ ▀███████████
+    ███           ███   ▐███  ▀███             ███          ███
+    ███     ▄█    ███  ▄███     ███▄     ▄█    ███    ▄█    ███
+    █▀    ▄████████▀  ████       ███▄  ▄████████▀   ▄████████▀
+    Version 0.1                             by  @Shelledlizard4
     """ + Colors.reset)
+
+def main():
+    banner()
+    parser = argparse.ArgumentParser(description="Check for reflected XSS characters",
+    usage="cat allUrls.txt | python3 isxss.py [options]")
+
+    parser.add_argument('-t', metavar='-threads', help="Specify the number of threads (default=50)")
+    parser.add_argument('-l', metavar='-list', help="Specify a file containing all the urls to be scanned")
+    parser.add_argument('-v', help="Debug mode", action='store_true')
+    global debug
+
+    args = parser.parse_args()
+
+
+    if(args.v == True):
+        debug = True
+
+    num_threads = 50
+    if(args.t != None):
+        num_threads = args.t
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        executor.map(requestor, sys.stdin)
+
+    if(sys.stdin == None):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=int(num_threads)) as executor:
+            executor.map(requestor, args.l)
+    else:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=int(num_threads)) as executor:
+            executor.map(requestor, sys.stdin)
 
 
 main()
