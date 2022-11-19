@@ -15,8 +15,6 @@ class Colors:
     darkgrey = '\033[90m'
 
 def requestor(line):
-    if(debug):
-        print("[+] " + line)
     urlString = line.strip('\n')
     url = urlparse(urlString)
     if(url.query):
@@ -27,22 +25,20 @@ def requestor(line):
             for i in params:
                 params[i] = 'xx1\'xx2\"xx3>xx4<'
             query = urlencode(params)
-            try:
-                reflected = []
-                response = requests.get(url.scheme + '://' + url.netloc + '/' + url.path + '?' + query, verify=False, timeout=10)
-                page = response.text
-                if(re.search('xx1\'', page)):
-                    reflected.append('\'')
-                if(re.search('xx2\"', page)):
-                    reflected.append('\"')
-                if(re.search('xx3>', page)):
-                    reflected.append('>')
-                if(re.search('xx4<', page)):
-                    reflected.append('<')
-                if(reflected):
-                    print('   [!][%s]' % ''.join(map(str,reflected)) + " " + url.scheme + '://' + url.netloc + '/' + url.path + '?' + query)
-            except:
-                pass
+            reflected = []
+            header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            response = requests.get(url.scheme + '://' + url.netloc + '/' + url.path + '?' + query, verify=False, timeout=20, headers=header)
+            page = response.text
+            if(re.search('xx1\'', page)):
+                reflected.append('\'')
+            if(re.search('xx2\"', page)):
+                reflected.append('\"')
+            if(re.search('xx3>', page)):
+                reflected.append('>')
+            if(re.search('xx4<', page)):
+                reflected.append('<')
+            if(reflected):
+                print('[%s]' % ''.join(map(str,reflected)) + " reflected in " + url.scheme + '://' + url.netloc + '/' + url.path + '?' + url.query)
 
 
 def banner():
