@@ -1,6 +1,9 @@
 # isXSS
 `isXSS` is a XSS vulnerability scanner that scans for reflected characters that could potentially lead to reflected XSS. These are the following characters that are checked for reflection: `' " < >`
 
+## TODO
+- Add check for SQL Injection (If `'` character is returning 500 error, then this should be logged to console)
+
 ## Usage 1 - stdin
 ```
 cat allUrls.txt | python3 isxss.py
