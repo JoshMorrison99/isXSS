@@ -3,7 +3,7 @@
 
 ## Install
 ```
-git clone https://github.com/JoshMorrison99/isXSS.git; cd isXSS; pip install -r requirements
+git clone https://github.com/JoshMorrison99/isXSS.git; cd isXSS; pip install -r requirements.txt
 ```
 
 ## TODO
