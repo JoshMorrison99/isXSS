@@ -3,6 +3,8 @@
 
 ## TODO
 - Add check for SQL Injection (If `'` character is returning 500 error, then this should be logged to console)
+- Clean up output (reflected in http://testphp.vulnweb.com//listproducts.php?cat=123%22 --> reflected in http://testphp.vulnweb.com//listproducts.php?cat=XSS">) change output to include only `=XSS + {vulnerable characters}`
+- Clean output to say which parameter the characters are being reflected in when for than one parameter is in the request.
 
 ## Usage 1 - stdin
 ```
