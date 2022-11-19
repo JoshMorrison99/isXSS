@@ -1,6 +1,11 @@
 # isXSS
 `isXSS` is a XSS vulnerability scanner that scans for reflected characters that could potentially lead to reflected XSS. These are the following characters that are checked for reflection: `' " < >`
 
+## Install
+```
+git clone https://github.com/JoshMorrison99/isXSS.git; cd isXSS; pip install -r requirements
+```
+
 ## TODO
 - Add check for SQL Injection (If `'` character is returning 500 error, then this should be logged to console)
 - Clean up output (reflected in http://testphp.vulnweb.com//listproducts.php?cat=123%22 --> reflected in http://testphp.vulnweb.com//listproducts.php?cat=XSS">) change output to include only `=XSS + {vulnerable characters}`
